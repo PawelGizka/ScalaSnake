@@ -5,7 +5,8 @@ import pl.pgizka.sclaSnake.Config
 
 case class Snake(blockPositions: Map[Int, Block], headIndex: Int, tailIndex: Int, currentDirection: Direction) {
 
-  def move(newDirection: Option[Direction], rewards: Seq[Reward]): Either[GameOverEvent, (Snake, Seq[Reward])] = {
+  def move(newDirection: Option[Direction], rewards: Seq[Reward])
+          (implicit config: Config): Either[GameOverEvent, (Snake, Option[Reward])] = {
     val headBlock = blockPositions(headIndex)
     val validMove = getValidMove(newDirection.getOrElse(currentDirection), currentDirection)
     val newHeadBlock = headBlock.move(validMove)
@@ -29,15 +30,8 @@ case class Snake(blockPositions: Map[Int, Block], headIndex: Int, tailIndex: Int
   def isCollision(headBlock: Block): Boolean =
     tailIndex.until(headIndex).foldLeft(false)((collision, key) => collision || blockPositions(key).equals(headBlock))
 
-  def makeMove(newHeadBlock: Block, rewards: Seq[Reward], validMove: Direction): scala.util.Right[GameOverEvent, (Snake, Seq[Reward])] = {
+  def makeMove(newHeadBlock: Block, rewards: Seq[Reward], validMove: Direction): scala.util.Right[GameOverEvent, (Snake, Option[Reward])] = {
     val rewardOption = getReward(newHeadBlock, rewards)
-
-    val newRewards = if (rewardOption.isDefined) {
-      val reward = rewardOption.get
-      rewards.filterNot(_.equals(reward))
-    } else {
-      rewards
-    }
 
     val newTailIndex = if (rewardOption.isDefined) tailIndex else tailIndex + 1
 
@@ -47,7 +41,7 @@ case class Snake(blockPositions: Map[Int, Block], headIndex: Int, tailIndex: Int
       blockPositions.-(tailIndex).+((headIndex + 1) -> newHeadBlock)
     }
 
-    scala.util.Right(Snake(newPositions, headIndex + 1, newTailIndex, validMove), newRewards)
+    scala.util.Right(Snake(newPositions, headIndex + 1, newTailIndex, validMove), rewardOption)
   }
 
   def getReward(newHeadBlock: Block, rewards: Seq[Reward]): Option[Reward] = {

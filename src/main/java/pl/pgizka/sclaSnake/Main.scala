@@ -8,7 +8,6 @@ import akka.stream.scaladsl.{Flow, Sink, Source}
 import pl.pgizka.sclaSnake.Graphics.GameScreen
 import pl.pgizka.sclaSnake.model._
 
-import scala.concurrent.duration._
 import scala.swing.event.KeyPressed
 import scala.swing.SwingApplication
 import scala.swing.event.Key
@@ -17,7 +16,7 @@ object Main extends SwingApplication {
 
   implicit val system = ActorSystem("ScalaSnake")
   implicit val materializer = ActorMaterializer()
-  implicit val config = Config.defaultConfig
+  implicit val config: Config = Config.defaultConfig
 
   val gameOverDialog = new GameOverDialog(() => setupGame())
 
@@ -43,7 +42,7 @@ object Main extends SwingApplication {
 
     val refreshSource =
       Source.repeat[GameEvent](RefreshEvent())
-        .throttle(1, 1.second, 1, ThrottleMode.Shaping)
+        .throttle(1, GameSpeed.refreshDuration, 1, ThrottleMode.Shaping)
 
     val updateFlow = Flow[GameEvent]
       .scan(initialGameState)((state, event) => state.update(event))

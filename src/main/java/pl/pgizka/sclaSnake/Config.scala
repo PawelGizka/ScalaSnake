@@ -10,6 +10,6 @@ case class Config(screenWidth: Int, screenHeight: Int, blockSize: Int) {
 
 object Config {
 
-  val defaultConfig = Config(screenWidth = 20, screenHeight = 20, blockSize = 20)
+  val defaultConfig: Config = Config(screenWidth = 20, screenHeight = 20, blockSize = 20)
 
 }
