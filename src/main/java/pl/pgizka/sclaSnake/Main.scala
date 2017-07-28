@@ -11,6 +11,7 @@ import pl.pgizka.sclaSnake.model._
 import scala.concurrent.duration._
 import scala.swing.event.KeyPressed
 import scala.swing.SwingApplication
+import scala.swing.event.Key
 
 object Main extends SwingApplication {
 
@@ -67,6 +68,9 @@ object Main extends SwingApplication {
     screen.component.reactions += {
       case KeyPressed(_, DirectionKey(direction), _, _) =>
         eventQueue.offer(MoveEvent(direction))
+      case KeyPressed(_, Key.P, _, _) =>
+        eventQueue.offer(PauseEvent())
+
     }
   }
 
