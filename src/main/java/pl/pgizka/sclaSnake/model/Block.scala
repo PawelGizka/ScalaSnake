@@ -2,12 +2,11 @@ package pl.pgizka.sclaSnake.model
 
 import pl.pgizka.sclaSnake.Config
 
-
 case class Block(x: Int, y: Int) {
   def xInPixels(implicit config: Config): Int = x * config.blockSize
   def yInPixels(implicit config: Config): Int = y * config.blockSize
 
-  def id(implicit config: Config): Int = y * config.screenHeight + x
+  def id(implicit config: Config): Int = y * config.screenWidth + x
 
   def move(direction: Direction)(implicit config: Config): Block =
     getWithinWindow(getNewPosition(direction))
@@ -36,8 +35,8 @@ case class Block(x: Int, y: Int) {
 
 object Block {
   def fromId(id: Int)(implicit config: Config): Block = {
-    val y = id / config.screenHeight
-    val x = id % config.screenHeight
+    val y = id / config.screenWidth
+    val x = id % config.screenWidth
     Block(x, y)
   }
 }

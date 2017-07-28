@@ -1,46 +1,41 @@
 package pl.pgizka.sclaSnake
 
-import java.awt.Dimension
-import java.nio.file.Paths
 
-import akka.NotUsed
 import akka.actor.ActorSystem
-import akka.stream.{ActorMaterializer, IOResult, OverflowStrategy, ThrottleMode}
-import akka.stream.scaladsl.{FileIO, Flow, Keep, RunnableGraph, Sink, Source}
-import akka.util.ByteString
+import akka.stream._
+import akka.stream.scaladsl.{Flow, Sink, Source}
+
 import pl.pgizka.sclaSnake.Graphics.GameScreen
 import pl.pgizka.sclaSnake.model._
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
-import scala.annotation.unchecked.uncheckedVariance
-import scala.concurrent.Future
-import scala.io.StdIn
-import scala.swing.event.Key.Location
-import scala.swing.event.{Key, KeyPressed}
-import scala.swing.{Frame, Label, MainFrame, SimpleSwingApplication}
-import pl.pgizka.sclaSnake.Config
+import scala.swing.event.KeyPressed
+import scala.swing.SwingApplication
 
-import scala.annotation.tailrec
+object Main extends SwingApplication {
 
+  implicit val system = ActorSystem("ScalaSnake")
+  implicit val materializer = ActorMaterializer()
+  implicit val config = Config.defaultConfig
 
-object Main extends SimpleSwingApplication {
-
-  val initialGameState: GameState = GameState.initialGameState(1)
-
-  val screen = new GameScreen(initialGameState)
-
-  override def top: Frame = new MainFrame {
-    centerOnScreen()
-    resizable = false
-    contents = screen
-  }
+  val gameOverDialog = new GameOverDialog(() => setupGame())
 
   override def main(args: Array[String]): Unit = {
     super.main(args)
+  }
 
-    implicit val system = ActorSystem("ScalaSnake")
-    implicit val materializer = ActorMaterializer()
+  override def startup(args: Array[String]): Unit = {
+    setupGame()
+  }
+
+  def setupGame(): Unit = {
+    val seed = System.currentTimeMillis()
+    val initialGameState: GameState = GameState.initialGameState(seed)
+
+    val screen = new GameScreen(initialGameState)
+    screen.visible = true
+
+    val killSwitch = KillSwitches.shared("main")
 
     val eventSource =
       Source.queue[GameEvent](bufferSize = 100, overflowStrategy = OverflowStrategy.backpressure)
@@ -52,24 +47,27 @@ object Main extends SimpleSwingApplication {
     val updateFlow = Flow[GameEvent]
       .scan(initialGameState)((state, event) => state.update(event))
 
-    val drawSink = Sink.foreach[GameState](screen.draw)
+    val drawSink = Sink.foreach[GameState](state => {
+      screen.draw(state)
+
+      if (state.gameOver) {
+        screen.close()
+        gameOverDialog.visible = true
+        killSwitch.shutdown()
+      }
+    })
 
     val eventQueue = eventSource.merge(refreshSource)
+      .via(killSwitch.flow)
       .via(updateFlow)
       .to(drawSink)
       .run()
 
 
-    screen.reactions += {
-      case KeyPressed(_, DirectionKey(direction), _, _) => {
+    screen.component.reactions += {
+      case KeyPressed(_, DirectionKey(direction), _, _) =>
         eventQueue.offer(MoveEvent(direction))
-      }
     }
-
-
-    StdIn.readLine()
-    eventQueue.complete()
   }
-
 
 }

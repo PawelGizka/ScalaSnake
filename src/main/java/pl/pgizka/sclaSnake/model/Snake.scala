@@ -5,11 +5,31 @@ import pl.pgizka.sclaSnake.Config
 
 case class Snake(blockPositions: Map[Int, Block], headIndex: Int, tailIndex: Int, currentDirection: Direction) {
 
-  def move(newDirection: Option[Direction], rewards: Seq[Reward]): (Snake, Seq[Reward]) = {
+  def move(newDirection: Option[Direction], rewards: Seq[Reward]): Either[GameOverEvent, (Snake, Seq[Reward])] = {
     val headBlock = blockPositions(headIndex)
     val validMove = getValidMove(newDirection.getOrElse(currentDirection), currentDirection)
     val newHeadBlock = headBlock.move(validMove)
 
+    if (isCollision(newHeadBlock)) {
+      scala.util.Left(GameOverEvent())
+    } else {
+      makeMove(newHeadBlock, rewards, validMove)
+    }
+  }
+
+  def getValidMove(newDirection: Direction, previousDirection: Direction): Direction =
+    (newDirection, previousDirection) match {
+      case (Up, Down) => Down
+      case (Left, Right) => Right
+      case (Right, Left) => Left
+      case (Down, Up) => Up
+      case (_, _) => newDirection
+    }
+
+  def isCollision(headBlock: Block): Boolean =
+    tailIndex.until(headIndex).foldLeft(false)((collision, key) => collision || blockPositions(key).equals(headBlock))
+
+  def makeMove(newHeadBlock: Block, rewards: Seq[Reward], validMove: Direction): scala.util.Right[GameOverEvent, (Snake, Seq[Reward])] = {
     val rewardOption = getReward(newHeadBlock, rewards)
 
     val newRewards = if (rewardOption.isDefined) {
@@ -27,16 +47,7 @@ case class Snake(blockPositions: Map[Int, Block], headIndex: Int, tailIndex: Int
       blockPositions.-(tailIndex).+((headIndex + 1) -> newHeadBlock)
     }
 
-    (Snake(newPositions, headIndex + 1, newTailIndex, validMove), newRewards)
-  }
-
-  def getValidMove(newDirection: Direction, previousDirection: Direction): Direction =
-    (newDirection, previousDirection) match {
-    case (Up, Down) => previousDirection
-    case (Left, Right) => previousDirection
-    case (Right, Left) => previousDirection
-    case (Down, Up) => previousDirection
-    case (_, _) => newDirection
+    scala.util.Right(Snake(newPositions, headIndex + 1, newTailIndex, validMove), newRewards)
   }
 
   def getReward(newHeadBlock: Block, rewards: Seq[Reward]): Option[Reward] = {

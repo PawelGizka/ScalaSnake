@@ -1,20 +1,21 @@
 package pl.pgizka.sclaSnake.model
 
-import pl.pgizka.sclaSnake.rng.RNG
+
 import pl.pgizka.sclaSnake.rng.RNG.Simple
 
-
-
-case class GameState(board: Board, lastMove: Option[Direction]) {
+case class GameState(board: Board, lastMove: Option[Direction], gameOver: Boolean = false) {
 
   def update(gameEvent: GameEvent): GameState = gameEvent match {
+    case _ if gameOver => this
     case RefreshEvent() => move()
     case MoveEvent(direction) => copy(lastMove = Some(direction))
   }
 
   def move(): GameState = {
-    val newBoard = board.move(lastMove)
-    copy(board = newBoard, lastMove = None)
+    board.move(lastMove).fold(
+      (gameOverEvent) => copy(gameOver = true),
+      (newBoard) => copy(board = newBoard, lastMove = None)
+    )
   }
 
 }

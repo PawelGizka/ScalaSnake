@@ -3,7 +3,7 @@ package pl.pgizka.sclaSnake.Graphics
 import java.awt.{Color, Graphics2D}
 
 import pl.pgizka.sclaSnake.Config
-import pl.pgizka.sclaSnake.model.{GameState, Snake}
+import pl.pgizka.sclaSnake.model.Snake
 
 
 object SnakeDrawable {
