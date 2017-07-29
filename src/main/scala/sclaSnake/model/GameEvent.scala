@@ -1,5 +1,4 @@
-package pl.pgizka.sclaSnake.model
-
+package sclaSnake.model
 
 sealed trait GameEvent
 

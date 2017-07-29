@@ -1,4 +1,4 @@
-package pl.pgizka.sclaSnake.model
+package sclaSnake.model
 
 import java.util.concurrent.TimeUnit
 

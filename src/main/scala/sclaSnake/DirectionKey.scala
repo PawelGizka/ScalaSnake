@@ -1,6 +1,6 @@
-package pl.pgizka.sclaSnake
+package sclaSnake
 
-import pl.pgizka.sclaSnake.model.{Direction, Down, Left, Right, Up}
+import sclaSnake.model.{Direction, Down, Up}
 
 import scala.swing.event.Key
 
@@ -8,8 +8,8 @@ object DirectionKey {
 
   val toKey: PartialFunction[Key.Value, Direction] = {
     case Key.Up => Up
-    case Key.Left => Left
-    case Key.Right => Right
+    case Key.Left => model.Left
+    case Key.Right => model.Right
     case Key.Down => Down
   }
 

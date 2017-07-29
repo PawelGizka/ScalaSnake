@@ -1,7 +1,7 @@
-package pl.pgizka.sclaSnake.model
+package sclaSnake.model
 
-import pl.pgizka.sclaSnake.Config
-import pl.pgizka.sclaSnake.rng.RNG
+import sclaSnake.Config
+import sclaSnake.rng.RNG
 
 
 case class Board(snake: Snake, rewards: Seq[Reward], rng: RNG) {

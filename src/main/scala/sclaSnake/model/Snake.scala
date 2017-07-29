@@ -1,6 +1,6 @@
-package pl.pgizka.sclaSnake.model
+package sclaSnake.model
 
-import pl.pgizka.sclaSnake.Config
+import sclaSnake.Config
 
 
 case class Snake(blockPositions: Map[Int, Block], headIndex: Int, tailIndex: Int, currentDirection: Direction) {

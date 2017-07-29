@@ -1,5 +1,4 @@
-package pl.pgizka.sclaSnake
-
+package sclaSnake
 
 case class Config(screenWidth: Int, screenHeight: Int, blockSize: Int) {
   val pixelScreenWidth: Int = screenWidth * blockSize

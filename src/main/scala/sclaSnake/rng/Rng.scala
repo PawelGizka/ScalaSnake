@@ -1,5 +1,4 @@
-package pl.pgizka.sclaSnake.rng
-
+package sclaSnake.rng
 
 trait RNG {
   def nextInt: (Int, RNG)

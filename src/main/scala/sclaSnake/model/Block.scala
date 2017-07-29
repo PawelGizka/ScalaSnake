@@ -1,6 +1,6 @@
-package pl.pgizka.sclaSnake.model
+package sclaSnake.model
 
-import pl.pgizka.sclaSnake.Config
+import sclaSnake.Config
 
 case class Block(x: Int, y: Int) {
   def xInPixels(implicit config: Config): Int = x * config.blockSize

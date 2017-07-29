@@ -1,9 +1,9 @@
-package pl.pgizka.sclaSnake.Graphics
+package sclaSnake.Graphics
 
 import java.awt.{Dimension, Graphics2D}
 
-import pl.pgizka.sclaSnake.Config
-import pl.pgizka.sclaSnake.model.GameState
+import sclaSnake.Config
+import sclaSnake.model.GameState
 
 import scala.swing.{Component, MainFrame}
 

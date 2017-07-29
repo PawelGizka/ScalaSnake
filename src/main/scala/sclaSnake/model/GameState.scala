@@ -1,8 +1,7 @@
-package pl.pgizka.sclaSnake.model
+package sclaSnake.model
 
-
-import pl.pgizka.sclaSnake.Config
-import pl.pgizka.sclaSnake.rng.RNG.Simple
+import sclaSnake.Config
+import sclaSnake.rng.RNG.Simple
 
 case class GameState(board: Board, lastMove: Option[Direction],
                      gameSpeed: GameSpeed, gameOver: Boolean = false, paused: Boolean = false) {

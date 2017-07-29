@@ -1,4 +1,4 @@
-package pl.pgizka.sclaSnake
+package sclaSnake
 
 import java.awt.Color
 

@@ -1,9 +1,9 @@
-package pl.pgizka.sclaSnake.Graphics
+package sclaSnake.Graphics
 
 import java.awt.Color
 
-import pl.pgizka.sclaSnake.Config
-import pl.pgizka.sclaSnake.model.Reward
+import sclaSnake.Config
+import sclaSnake.model.Reward
 
 import scala.swing.Graphics2D
 

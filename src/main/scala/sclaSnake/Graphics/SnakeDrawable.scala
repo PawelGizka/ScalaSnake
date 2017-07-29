@@ -1,9 +1,9 @@
-package pl.pgizka.sclaSnake.Graphics
+package sclaSnake.Graphics
 
 import java.awt.{Color, Graphics2D}
 
-import pl.pgizka.sclaSnake.Config
-import pl.pgizka.sclaSnake.model.Snake
+import sclaSnake.Config
+import sclaSnake.model.Snake
 
 
 object SnakeDrawable {

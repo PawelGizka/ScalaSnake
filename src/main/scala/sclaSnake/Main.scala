@@ -1,16 +1,13 @@
-package pl.pgizka.sclaSnake
-
+package sclaSnake
 
 import akka.actor.ActorSystem
 import akka.stream._
 import akka.stream.scaladsl.{Flow, Sink, Source}
+import sclaSnake.Graphics.GameScreen
+import sclaSnake.model._
 
-import pl.pgizka.sclaSnake.Graphics.GameScreen
-import pl.pgizka.sclaSnake.model._
-
-import scala.swing.event.KeyPressed
 import scala.swing.SwingApplication
-import scala.swing.event.Key
+import scala.swing.event.{Key, KeyPressed}
 
 object Main extends SwingApplication {
 
