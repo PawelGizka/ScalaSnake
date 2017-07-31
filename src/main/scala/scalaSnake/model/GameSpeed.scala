@@ -1,4 +1,4 @@
-package sclaSnake.model
+package scalaSnake.model
 
 import java.util.concurrent.TimeUnit
 

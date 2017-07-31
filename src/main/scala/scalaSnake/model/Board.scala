@@ -1,6 +1,6 @@
-package sclaSnake.model
+package scalaSnake.model
 
-import sclaSnake.rng.RNG
+import scalaSnake.rng.RNG
 
 case class Board(snake: Snake, rewards: Seq[Reward], rng: RNG) {
 

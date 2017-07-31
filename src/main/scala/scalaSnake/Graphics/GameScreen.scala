@@ -1,8 +1,8 @@
-package sclaSnake.Graphics
+package scalaSnake.Graphics
 
 import java.awt.{Dimension, Graphics2D}
 
-import sclaSnake.model.{Config, GameState}
+import scalaSnake.model.{Config, GameState}
 
 import scala.swing.{BoxPanel, Component, Label, MainFrame, Orientation, Swing}
 

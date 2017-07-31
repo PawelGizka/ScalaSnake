@@ -1,6 +1,6 @@
-package sclaSnake
+package scalaSnake
 
-import sclaSnake.model.Direction
+import scalaSnake.model.Direction
 
 import scala.swing.event.Key
 

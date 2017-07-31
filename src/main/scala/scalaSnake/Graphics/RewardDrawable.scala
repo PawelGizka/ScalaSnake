@@ -1,8 +1,8 @@
-package sclaSnake.Graphics
+package scalaSnake.Graphics
 
 import java.awt.Color
 
-import sclaSnake.model.{Config, Reward}
+import scalaSnake.model.{Config, Reward}
 
 import scala.swing.Graphics2D
 

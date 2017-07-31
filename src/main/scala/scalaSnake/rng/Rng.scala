@@ -1,4 +1,4 @@
-package sclaSnake.rng
+package scalaSnake.rng
 
 trait RNG {
   def nextInt: (Int, RNG)

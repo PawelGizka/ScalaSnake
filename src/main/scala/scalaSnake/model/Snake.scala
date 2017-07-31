@@ -1,4 +1,4 @@
-package sclaSnake.model
+package scalaSnake.model
 
 
 case class Snake(blockPositions: Map[Int, Block], headIndex: Int, tailIndex: Int, currentDirection: Direction) {

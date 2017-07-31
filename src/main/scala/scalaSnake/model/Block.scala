@@ -1,4 +1,4 @@
-package sclaSnake.model
+package scalaSnake.model
 
 case class Block(x: Int, y: Int) {
   def xInPixels(implicit config: Config): Int = x * config.blockSize

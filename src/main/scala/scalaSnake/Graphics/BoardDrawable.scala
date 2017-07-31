@@ -1,8 +1,8 @@
-package sclaSnake.Graphics
+package scalaSnake.Graphics
 
 import java.awt.{Color, Font, Graphics2D}
 
-import sclaSnake.model.{Config, GameState}
+import scalaSnake.model.{Config, GameState}
 
 object BoardDrawable {
 

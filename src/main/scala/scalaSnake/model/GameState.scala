@@ -1,6 +1,6 @@
-package sclaSnake.model
+package scalaSnake.model
 
-import sclaSnake.rng.RNG.Simple
+import scalaSnake.rng.RNG.Simple
 
 case class GameState(board: Board, lastMove: Option[Direction],
                      gameSpeed: GameSpeed, score: Int = 0,

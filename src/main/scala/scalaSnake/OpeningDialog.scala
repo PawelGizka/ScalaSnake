@@ -1,8 +1,8 @@
-package sclaSnake
+package scalaSnake
 
 import java.awt.Dimension
 
-import sclaSnake.model.{Config, GameDifficulty}
+import scalaSnake.model.{Config, GameDifficulty}
 
 import scala.swing.{BoxPanel, Button, ComboBox, Label, MainFrame, Orientation, Slider, Swing}
 

@@ -1,10 +1,10 @@
-package sclaSnake
+package scalaSnake
 
 import akka.actor.ActorSystem
 import akka.stream._
 import akka.stream.scaladsl.{Flow, Sink, Source}
-import sclaSnake.Graphics.GameScreen
-import sclaSnake.model._
+import scalaSnake.Graphics.GameScreen
+import scalaSnake.model._
 
 import scala.swing.SwingApplication
 import scala.swing.event.{Key, KeyPressed}

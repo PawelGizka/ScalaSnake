@@ -1,4 +1,4 @@
-package sclaSnake.model
+package scalaSnake.model
 
 
 case class GameDifficulty(name: String, initialGameSpeed: GameSpeed, maxGameSpeed: GameSpeed,

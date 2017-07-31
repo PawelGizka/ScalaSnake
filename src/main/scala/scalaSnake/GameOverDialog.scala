@@ -1,4 +1,4 @@
-package sclaSnake
+package scalaSnake
 
 import java.awt.{Color, Dimension}
 

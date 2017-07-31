@@ -1,4 +1,4 @@
-package sclaSnake.model
+package scalaSnake.model
 
 case class Config(screenWidth: Int, screenHeight: Int, blockSize: Int, gameLevel: GameDifficulty) {
   val pixelScreenWidth: Int = screenWidth * blockSize

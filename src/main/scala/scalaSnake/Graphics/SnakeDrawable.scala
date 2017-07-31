@@ -1,8 +1,8 @@
-package sclaSnake.Graphics
+package scalaSnake.Graphics
 
 import java.awt.{Color, Graphics2D}
 
-import sclaSnake.model.{Config, Snake}
+import scalaSnake.model.{Config, Snake}
 
 
 object SnakeDrawable {
