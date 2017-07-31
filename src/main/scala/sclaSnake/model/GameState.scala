@@ -1,10 +1,10 @@
 package sclaSnake.model
 
-import sclaSnake.Config
 import sclaSnake.rng.RNG.Simple
 
 case class GameState(board: Board, lastMove: Option[Direction],
-                     gameSpeed: GameSpeed, gameOver: Boolean = false, paused: Boolean = false) {
+                     gameSpeed: GameSpeed, score: Int = 0,
+                     gameOver: Boolean = false, paused: Boolean = false) {
 
   def update(gameEvent: GameEvent)(implicit config: Config): GameState = gameEvent match {
     case PauseEvent() => copy(paused = !paused)
@@ -23,12 +23,24 @@ case class GameState(board: Board, lastMove: Option[Direction],
         val (newBoard, rewardOption) = tuple
 
         val newGameSpeed = if (rewardOption.isDefined) {
-          newSpeed.increaseSpeedByOneReward
+          newSpeed.increaseSpeedByGameLevel(config.gameLevel)
         } else {
           newSpeed
         }
 
-        copy(board = newBoard, lastMove = None, gameSpeed = newGameSpeed)
+        val newScore = if (rewardOption.isDefined) {
+          val reward = rewardOption.get
+          if (score == 0) {
+            reward.value
+          } else {
+            score +
+              (reward.value * config.gameLevel.scoreMultiplier * (100 / gameSpeed.makeMoveAfterRefreshes))
+          }
+        } else {
+          score
+        }
+
+        copy(board = newBoard, lastMove = None, gameSpeed = newGameSpeed, score = newScore)
       }
 
       board.move(lastMove).fold(whenGameIsOver, whenGameIsContinued)
@@ -46,7 +58,7 @@ object GameState {
   def initialGameState(seed: Long)(implicit config: Config): GameState = {
     val snake = Snake.initialSnake
     val rng = Simple(seed)
-    GameState(Board.initialBoard(snake, rng), None, GameSpeed.slowSpeed)
+    GameState(Board.initialBoard(snake, rng), None, config.gameLevel.initialGameSpeed)
   }
 
 }

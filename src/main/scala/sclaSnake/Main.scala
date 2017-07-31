@@ -13,19 +13,19 @@ object Main extends SwingApplication {
 
   implicit val system = ActorSystem("ScalaSnake")
   implicit val materializer = ActorMaterializer()
-  implicit val config: Config = Config.defaultConfig
 
-  val gameOverDialog = new GameOverDialog(() => setupGame())
-
-  override def main(args: Array[String]): Unit = {
-    super.main(args)
-  }
+  val gameOverDialog = new GameOverDialog(() => showOpeningDialog())
 
   override def startup(args: Array[String]): Unit = {
-    setupGame()
+    showOpeningDialog()
   }
 
-  def setupGame(): Unit = {
+  def showOpeningDialog(): Unit = {
+    val openingDialog = new OpeningDialog((config) => setupGame(config))
+    openingDialog.visible = true
+  }
+
+  def setupGame(implicit config: Config): Unit = {
     val seed = System.currentTimeMillis()
     val initialGameState: GameState = GameState.initialGameState(seed)
 
@@ -48,9 +48,10 @@ object Main extends SwingApplication {
       screen.draw(state)
 
       if (state.gameOver) {
-        screen.close()
-        gameOverDialog.visible = true
         killSwitch.shutdown()
+        screen.close()
+        gameOverDialog.setScores(state.score)
+        gameOverDialog.visible = true
       }
     })
 

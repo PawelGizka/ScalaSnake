@@ -6,7 +6,7 @@ import scala.concurrent.duration.FiniteDuration
 
 
 case class GameSpeed(makeMoveAfterRefreshes: Int, per: FiniteDuration, refreshCounter: Int) {
-  def this(makeMoveAfterRefreshes: Int, per: FiniteDuration) = this(makeMoveAfterRefreshes, per, 0)
+  def this(makeMoveAfterRefreshes: Int) = this(makeMoveAfterRefreshes, GameSpeed.refreshDuration, 0)
 
   def canMakeMoveAfterRefresh: (Boolean, GameSpeed) = {
     if (refreshCounter >= makeMoveAfterRefreshes) {
@@ -16,9 +16,11 @@ case class GameSpeed(makeMoveAfterRefreshes: Int, per: FiniteDuration, refreshCo
     }
   }
 
-  def increaseSpeedByOneReward: GameSpeed = {
-    val newSpeed = makeMoveAfterRefreshes - 7
-    copy(makeMoveAfterRefreshes = if (newSpeed < 10) 10 else newSpeed)
+  def increaseSpeedByGameLevel(gameDifficulty: GameDifficulty): GameSpeed = {
+    val newSpeed = (makeMoveAfterRefreshes * gameDifficulty.speedMultiplier).toInt
+    val maxRefreshes = gameDifficulty.maxGameSpeed.makeMoveAfterRefreshes
+    val maxSpeed = if (newSpeed < maxRefreshes) maxRefreshes else newSpeed
+    copy(makeMoveAfterRefreshes = maxSpeed)
   }
 
 }
@@ -26,7 +28,8 @@ case class GameSpeed(makeMoveAfterRefreshes: Int, per: FiniteDuration, refreshCo
 object GameSpeed {
   val refreshDuration = FiniteDuration(10, TimeUnit.MILLISECONDS)
 
-  val slowSpeed = new GameSpeed(100, refreshDuration)
-  val mediumSpeed = new GameSpeed(50, refreshDuration)
-  val insaneSpeed = new GameSpeed(10, refreshDuration)
+  val slowSpeed = new GameSpeed(100)
+  val mediumSpeed = new GameSpeed(50)
+  val fastSpeed = new GameSpeed(20)
+  val insaneSpeed = new GameSpeed(5)
 }

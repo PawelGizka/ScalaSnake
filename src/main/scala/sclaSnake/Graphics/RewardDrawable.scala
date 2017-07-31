@@ -2,8 +2,7 @@ package sclaSnake.Graphics
 
 import java.awt.Color
 
-import sclaSnake.Config
-import sclaSnake.model.Reward
+import sclaSnake.model.{Config, Reward}
 
 import scala.swing.Graphics2D
 

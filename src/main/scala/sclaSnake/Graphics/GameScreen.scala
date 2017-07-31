@@ -2,10 +2,9 @@ package sclaSnake.Graphics
 
 import java.awt.{Dimension, Graphics2D}
 
-import sclaSnake.Config
-import sclaSnake.model.GameState
+import sclaSnake.model.{Config, GameState}
 
-import scala.swing.{Component, MainFrame}
+import scala.swing.{BoxPanel, Component, Label, MainFrame, Orientation, Swing}
 
 
 class GameScreen(var gameState: GameState)(implicit config: Config) extends MainFrame {
@@ -14,9 +13,13 @@ class GameScreen(var gameState: GameState)(implicit config: Config) extends Main
   centerOnScreen()
   resizable = false
 
+  val scoreLabel = new Label("Score: ")
+  val gameLevelLabel = new Label(s"Game Level: ${config.gameLevel}")
+
   def draw(gameState: GameState): Unit = {
-    repaint()
     this.gameState = gameState
+    scoreLabel.text= s"Score: ${gameState.score}"
+    repaint()
   }
 
   val component = new Component {
@@ -31,5 +34,16 @@ class GameScreen(var gameState: GameState)(implicit config: Config) extends Main
     }
   }
 
-  contents = component
+  contents = new BoxPanel(Orientation.Vertical) {
+    contents += new BoxPanel(Orientation.Horizontal) {
+      contents += scoreLabel
+      contents += Swing.HStrut(70)
+      contents += gameLevelLabel
+
+    }
+    contents += Swing.VStrut(10)
+    contents += Swing.Glue
+    contents += component
+
+  }
 }

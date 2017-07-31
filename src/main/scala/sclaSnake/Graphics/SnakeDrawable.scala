@@ -2,8 +2,7 @@ package sclaSnake.Graphics
 
 import java.awt.{Color, Graphics2D}
 
-import sclaSnake.Config
-import sclaSnake.model.Snake
+import sclaSnake.model.{Config, Snake}
 
 
 object SnakeDrawable {

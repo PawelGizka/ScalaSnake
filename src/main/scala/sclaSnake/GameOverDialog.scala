@@ -1,19 +1,23 @@
 package sclaSnake
 
-import java.awt.Color
+import java.awt.{Color, Dimension}
 
 import scala.swing.{BoxPanel, Button, Dialog, Label, MainFrame, Orientation, Swing}
 
 
 class GameOverDialog(playAgainCallback: () => Unit) extends MainFrame {
   title = "Scala Snake"
+  centerOnScreen()
 
-  val questionLabel = new Label("Game over. Do you want to play again?")
+  val scoreLabel = new Label("")
 
-  questionLabel.foreground = Color.BLACK
+  preferredSize = new Dimension(350, 150)
 
   contents = new BoxPanel(Orientation.Vertical) {
-    contents += questionLabel
+    contents += scoreLabel
+    contents += Swing.VStrut(10)
+    contents += Swing.Glue
+    contents += new Label("Do you want to play again?")
     contents += Swing.VStrut(10)
     contents += Swing.Glue
 
@@ -30,6 +34,10 @@ class GameOverDialog(playAgainCallback: () => Unit) extends MainFrame {
   def playAgain() {
     playAgainCallback()
     close()
+  }
+
+  def setScores(scores: Int): Unit = {
+    scoreLabel.text = s"Game over. Your final result is $scores scores."
   }
 
   def closeMe() {

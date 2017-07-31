@@ -1,7 +1,5 @@
 package sclaSnake.model
 
-import sclaSnake.Config
-
 case class Block(x: Int, y: Int) {
   def xInPixels(implicit config: Config): Int = x * config.blockSize
   def yInPixels(implicit config: Config): Int = y * config.blockSize

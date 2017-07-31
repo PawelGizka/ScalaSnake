@@ -2,8 +2,7 @@ package sclaSnake.Graphics
 
 import java.awt.{Color, Font, Graphics2D}
 
-import sclaSnake.Config
-import sclaSnake.model.GameState
+import sclaSnake.model.{Config, GameState}
 
 object BoardDrawable {
 
@@ -24,13 +23,13 @@ object BoardDrawable {
   def drawBoard(g: Graphics2D)(implicit config: Config): Unit = {
 
     def drawRow(y: Int): Unit =
-      (0 to (config.pixelScreenWidth, config.blockSize)).foreach(x => {
+      (0 until (config.pixelScreenWidth, config.blockSize)).foreach(x => {
         g.setColor(Color.BLACK)
         g.drawRect(x, y, config.blockSize, config.blockSize)
       })
 
     def drawColumns(): Unit =
-      (0 to (config.pixelScreenHeight, config.blockSize)).foreach(y => drawRow(y))
+      (0 until (config.pixelScreenHeight, config.blockSize)).foreach(y => drawRow(y))
 
     drawColumns()
   }

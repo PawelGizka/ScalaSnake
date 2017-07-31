@@ -1,7 +1,5 @@
 package sclaSnake.model
 
-import sclaSnake.Config
-
 
 case class Snake(blockPositions: Map[Int, Block], headIndex: Int, tailIndex: Int, currentDirection: Direction) {
 
