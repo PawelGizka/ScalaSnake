@@ -58,8 +58,13 @@ case class Snake(blockPositions: Map[Int, Block], headIndex: Int, tailIndex: Int
 
 object Snake {
 
-  val initialSnake: Snake = {
-    val map = Map(0 -> Block(0, 0), 1 -> Block(1, 0), 2 -> Block(2, 0))
+  def initialSnake(implicit config: Config): Snake = {
+    val headXPosition = config.screenWidth / 2 + 1
+    val headYPosition = config.screenHeight / 2
+    val map = Map(
+      0 -> Block(headXPosition - 2, headYPosition),
+      1 -> Block(headXPosition - 1, headYPosition),
+      2 -> Block(headXPosition, headYPosition))
     new Snake(map, 2, 0, Right)
   }
 }
