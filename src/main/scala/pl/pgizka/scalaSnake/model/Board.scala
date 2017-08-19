@@ -36,7 +36,6 @@ case class Board(snake: Snake, rewards: Seq[Reward], rng: RNG) {
 
 object Board {
   def initialBoard(snake: Snake, rng: RNG)(implicit config: Config): Board = {
-    //TODO refactor it
     val empty = Board(snake, Seq(), rng)
     val one = empty.placeReward(snake, empty.rewards)
     val two = one.placeReward(snake, one.rewards)

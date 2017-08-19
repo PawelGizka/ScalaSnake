@@ -23,7 +23,7 @@ case class GameState(board: Board, lastMove: Option[Direction],
         val (newBoard, rewardOption) = tuple
 
         val newGameSpeed = if (rewardOption.isDefined) {
-          newSpeed.increaseSpeedByGameLevel(config.gameLevel)
+          newSpeed.increaseSpeedByGameDifficulty(config.gameLevel)
         } else {
           newSpeed
         }
