@@ -6,7 +6,7 @@ case class Snake(blockPositions: Map[Int, Block], headIndex: Int, tailIndex: Int
   def move(newDirection: Option[Direction], rewards: Seq[Reward])
           (implicit config: Config): Either[GameOverEvent, (Snake, Option[Reward])] = {
     val headBlock = blockPositions(headIndex)
-    val validMove = getValidMove(newDirection.getOrElse(currentDirection), currentDirection)
+    val validMove = getValidMove(newDirection.getOrElse(currentDirection))
     val newHeadBlock = headBlock.move(validMove)
 
     if (isCollision(newHeadBlock)) {
@@ -16,8 +16,8 @@ case class Snake(blockPositions: Map[Int, Block], headIndex: Int, tailIndex: Int
     }
   }
 
-  def getValidMove(newDirection: Direction, previousDirection: Direction): Direction =
-    (newDirection, previousDirection) match {
+  def getValidMove(newDirection: Direction): Direction =
+    (newDirection, currentDirection) match {
       case (Up, Down) => Down
       case (Left, Right) => Right
       case (Right, Left) => Left
@@ -58,13 +58,33 @@ case class Snake(blockPositions: Map[Int, Block], headIndex: Int, tailIndex: Int
 
 object Snake {
 
-  def initialSnake(implicit config: Config): Snake = {
-    val headXPosition = config.screenWidth / 2 + 1
-    val headYPosition = config.screenHeight / 2
-    val map = Map(
-      0 -> Block(headXPosition - 2, headYPosition),
-      1 -> Block(headXPosition - 1, headYPosition),
-      2 -> Block(headXPosition, headYPosition))
-    new Snake(map, 2, 0, Right)
+  def initialSnake(direction: Direction = Right)(implicit config: Config): Snake = {
+    val centerX = config.screenWidth / 2
+    val centerY = config.screenHeight / 2
+    val blockCenter = Block(centerX, centerY)
+
+    val blocks = direction match {
+      case Up => Map(
+        0 -> blockCenter.move(Down),
+        1 -> blockCenter,
+        2 -> blockCenter.move(Up))
+
+      case Down => Map(
+        0 -> blockCenter.move(Up),
+        1 -> blockCenter,
+        2 -> blockCenter.move(Down))
+
+      case Left => Map(
+        0 -> blockCenter.move(Right),
+        1 -> blockCenter,
+        2 -> blockCenter.move(Left))
+
+      case Right => Map(
+        0 -> blockCenter.move(Left),
+        1 -> blockCenter,
+        2 -> blockCenter.move(Right))
+    }
+
+    new Snake(blocks, 2, 0, direction)
   }
 }

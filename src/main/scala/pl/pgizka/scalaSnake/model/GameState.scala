@@ -56,7 +56,7 @@ case class GameState(board: Board, lastMove: Option[Direction],
 object GameState {
 
   def initialGameState(seed: Long)(implicit config: Config): GameState = {
-    val snake = Snake.initialSnake
+    val snake = Snake.initialSnake(direction = Right)
     val rng = Simple(seed)
     GameState(Board.initialBoard(snake, rng), None, config.gameLevel.initialGameSpeed)
   }
