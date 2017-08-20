@@ -46,16 +46,7 @@ class SnakeTest extends WordSpec with MustMatchers with GivenWhenThen {
     }
 
     "detect collision" in {
-      val blocks = Map(
-        0 -> Block(0, 0),
-        1 -> Block(0, 1),
-        2 -> Block(0, 2),
-        3 -> Block(1, 2),
-        4 -> Block(1, 1))
-
-      val longSnake = Snake(blocks, 4, 0, Up)
-
-      longSnake.move(Some(Left), Seq.empty).left.value mustBe GameOverEvent()
+      TestUtils.collisionSnake.move(Some(Left), Seq.empty).left.value mustBe GameOverEvent()
     }
 
     "collect rewards and elongate itself" in {
