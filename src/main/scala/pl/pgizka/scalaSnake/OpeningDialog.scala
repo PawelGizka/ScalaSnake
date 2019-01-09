@@ -2,6 +2,7 @@ package scalaSnake
 
 import java.awt.Dimension
 
+import pl.pgizka.scalaSnake.model.GameMode
 import scalaSnake.model.{Config, GameDifficulty}
 
 import scala.swing.{BoxPanel, Button, ComboBox, Label, MainFrame, Orientation, Slider, Swing}
@@ -40,6 +41,7 @@ class OpeningDialog(playCallback: (Config) => Unit) extends MainFrame {
   boardBlockSizeSlider.value = 20
 
   val gameDifficultyComboBox = new ComboBox(List(GameDifficulty.easy.name, GameDifficulty.medium.name, GameDifficulty.hard.name))
+  val gameModeComboBox = new ComboBox(List(GameMode.single, GameMode.mulitiplayer))
 
   contents = new BoxPanel(Orientation.Vertical) {
     contents += new Label("Welcome to functional Scala Snake")
@@ -62,6 +64,13 @@ class OpeningDialog(playCallback: (Config) => Unit) extends MainFrame {
       contents += Swing.HStrut(20)
       contents += gameDifficultyComboBox
     }
+    contents += Swing.VStrut(10)
+    contents += Swing.VGlue
+    contents += new BoxPanel(Orientation.Horizontal) {
+      contents += new Label("Mode: ")
+      contents += Swing.HStrut(20)
+      contents += gameModeComboBox
+    }
 
     contents += Button("Play!") { play() }
 
@@ -76,7 +85,12 @@ class OpeningDialog(playCallback: (Config) => Unit) extends MainFrame {
       case GameDifficulty.hard.name => GameDifficulty.hard
     }
 
-    playCallback(Config(boardWidthSlider.value, boardHeightSlider.value, boardBlockSizeSlider.value, gameLevel))
+    val multiplayer = gameModeComboBox.selection.item match {
+      case GameMode.single => false
+      case GameMode.mulitiplayer => true
+    }
+
+    playCallback(Config(boardWidthSlider.value, boardHeightSlider.value, boardBlockSizeSlider.value, gameLevel, multiplayer))
 
     close()
   }

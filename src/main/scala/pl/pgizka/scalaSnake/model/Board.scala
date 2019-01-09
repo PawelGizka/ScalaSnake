@@ -1,45 +1,71 @@
 package scalaSnake.model
 
+import pl.pgizka.scalaSnake.model.BoardMoveResult
 import scalaSnake.rng.RNG
 
-case class Board(snake: Snake, rewards: Seq[Reward], rng: RNG) {
+case class Board(snake: Snake, snake2: Option[Snake], rewards: Seq[Reward], rng: RNG) {
 
-  def this(snake: Snake, rng: RNG) = {
-    this(snake, List(), rng)
-  }
+  def move(newDirection: Option[Direction], secondPlayerNewDirection: Option[Direction])
+          (implicit config: Config): Either[GameOverEvent, BoardMoveResult] = {
+    val (newSnake, collectedReward) = snake.move(newDirection, rewards)
+    if (newSnake.isCollision) {
+      scala.util.Left(GameOverEvent())
+    } else {
+//
+      val newRewards = removeReward(collectedReward, rewards)
 
-  def move(newDirection: Option[Direction])(implicit config: Config): Either[GameOverEvent, (Board, Option[Reward])] = {
-    snake.move(newDirection, rewards).map{ case (newSnake, rewardOption) =>
-      if (rewardOption.isDefined) {
-        val reward = rewardOption.get
-        val board = placeReward(newSnake, rewards.filterNot(_.equals(reward)))
-        (board, rewardOption)
+      val result = snake2.map(_.move(secondPlayerNewDirection, newRewards))
+
+      if (result.isDefined) {
+        val (secondNewSnake, secondCollectedReward) = result.get
+
+        val firstSnakeCrash = newSnake.isCollisionIn(secondNewSnake)
+        val secondSnakeCrash = secondNewSnake.isCollisionIn(newSnake)
+
+        if (secondNewSnake.isCollision || firstSnakeCrash || secondSnakeCrash) {
+          scala.util.Left(GameOverEvent())
+        } else {
+          val newBoard = placeNecessaryRewards(newSnake, Some(secondNewSnake), removeReward(secondCollectedReward, newRewards))
+          scala.util.Right(BoardMoveResult(newBoard, collectedReward, secondCollectedReward))
+        }
       } else {
-        (Board(newSnake, rewards, rng), None)
+        val newBoard = placeNecessaryRewards(newSnake, snake2, newRewards)
+        scala.util.Right(BoardMoveResult(newBoard, collectedReward, None))
       }
+
     }
   }
 
-  def placeReward(snake: Snake, rewards: Seq[Reward])(implicit config: Config): Board = {
-    val occupiedBlocksIds = (snake.getBlockIds ++ rewards.map(_.position.id)).sorted
-    val freeBlocks = config.boardSize - occupiedBlocksIds.size
 
-    val (random, rng1) = RNG.nonNegativeLessThan(freeBlocks)(rng)
+  def removeReward(rewardOption: Option[Reward], rewards: Seq[Reward]): Seq[Reward] = {
+    rewardOption.map(reward => rewards.filterNot(_.equals(reward))).getOrElse(rewards)
+  }
 
-    val freeBlockId = occupiedBlocksIds.foldLeft(random)((random, id) => if (id <= random) random + 1 else random)
 
-    val (newReward, rng2) = Reward.fromIdAndRng(freeBlockId, rng1)
+  def placeNecessaryRewards(newSnake: Snake, newSecondSnake: Option[Snake], rewards: Seq[Reward])
+                           (implicit config: Config): Board = {
+    val rewardsToPlace = 3 - rewards.size
 
-    Board(snake, rewards.+:(newReward), rng2)
+    val occupiedBlocks =
+      snake.getBlockIds ++
+      newSecondSnake.map(_.getBlockIds).getOrElse(Seq.empty) ++
+      rewards.map(_.position.id)
+
+    val (newRewards, newRng) = 1.to(rewardsToPlace).foldLeft((Seq.empty[Reward], rng)) {
+      case ((currentRewards, currentRng), c) =>
+        val (newReward, newRng) = Reward.fromOccupiedBlocks(occupiedBlocks ++ currentRewards.map(_.position.id), currentRng)
+        (currentRewards :+ newReward, newRng)
+    }
+
+    Board(newSnake, newSecondSnake, newRewards ++ rewards, newRng)
   }
 }
 
 object Board {
-  def initialBoard(snake: Snake, rng: RNG)(implicit config: Config): Board = {
-    val empty = Board(snake, Seq(), rng)
-    val one = empty.placeReward(snake, empty.rewards)
-    val two = one.placeReward(snake, one.rewards)
-    val three = two.placeReward(snake, two.rewards)
-    three
+
+
+
+  def initialBoard(snake: Snake, secondSnake: Option[Snake], rng: RNG)(implicit config: Config): Board = {
+    Board(snake, secondSnake, Seq(), rng).placeNecessaryRewards(snake, secondSnake, Seq())
   }
 }

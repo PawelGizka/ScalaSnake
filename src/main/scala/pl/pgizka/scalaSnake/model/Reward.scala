@@ -10,4 +10,14 @@ object Reward {
     val reward = new Reward(Block.fromId(blockId), rewardValue)
     (reward, newRng)
   }
+
+  def fromOccupiedBlocks(occupiedBlocksIds: Seq[Int], rng: RNG)(implicit config: Config): (Reward, RNG) = {
+    val freeBlocks = config.boardSize - occupiedBlocksIds.size
+
+    val (random, rng1) = RNG.nonNegativeLessThan(freeBlocks)(rng)
+
+    val freeBlockId = occupiedBlocksIds.sorted.foldLeft(random)((random, id) => if (id <= random) random + 1 else random)
+
+    Reward.fromIdAndRng(freeBlockId, rng1)
+  }
 }

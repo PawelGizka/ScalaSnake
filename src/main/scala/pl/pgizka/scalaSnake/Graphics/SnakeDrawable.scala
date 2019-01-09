@@ -7,7 +7,7 @@ import scalaSnake.model.{Config, Snake}
 
 object SnakeDrawable {
 
-  def draw(snake: Snake, g: Graphics2D)(implicit config: Config): Unit = {
+  def draw(snake: Snake, g: Graphics2D, bodyColor: Color)(implicit config: Config): Unit = {
 
     (snake.tailIndex to snake.headIndex).foreach(key => {
       val block = snake.blockPositions(key)
@@ -15,7 +15,7 @@ object SnakeDrawable {
       if (key == snake.headIndex) {
         g.setColor(Color.blue)
       } else {
-        g.setColor(Color.green)
+        g.setColor(bodyColor)
       }
 
       g.fillOval(block.xInPixels, block.yInPixels, config.blockSize, config.blockSize)

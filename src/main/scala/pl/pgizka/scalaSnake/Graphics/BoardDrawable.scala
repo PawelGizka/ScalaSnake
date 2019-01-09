@@ -9,7 +9,9 @@ object BoardDrawable {
   def draw(gameState: GameState, g: Graphics2D)(implicit config: Config): Unit = {
     drawBoard(g)
 
-    SnakeDrawable.draw(gameState.board.snake, g)
+    SnakeDrawable.draw(gameState.board.snake, g, Color.green)
+    gameState.board.snake2.foreach(SnakeDrawable.draw(_, g, Color.red))
+
     RewardDrawable.draw(gameState.board.rewards, g)
 
     if (gameState.paused) {

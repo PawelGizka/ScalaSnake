@@ -2,6 +2,8 @@ package scalaSnake
 
 import java.awt.{Color, Dimension}
 
+import scalaSnake.model.{Config, GameState}
+
 import scala.swing.{BoxPanel, Button, Dialog, Label, MainFrame, Orientation, Swing}
 
 
@@ -36,8 +38,12 @@ class GameOverDialog(playAgainCallback: () => Unit) extends MainFrame {
     close()
   }
 
-  def setScores(scores: Int): Unit = {
-    scoreLabel.text = s"Game over. Your final result is $scores scores."
+  def setScores(gameState: GameState)(implicit config: Config): Unit = {
+    if (config.multiplayer) {
+      scoreLabel.text = s"Game over. Final results: player1 ${gameState.score} scores, player2: ${gameState.secondPlayerScore} scores"
+    } else {
+      scoreLabel.text = s"Game over. Your final result is ${gameState.score} scores."
+    }
   }
 
   def closeMe() {

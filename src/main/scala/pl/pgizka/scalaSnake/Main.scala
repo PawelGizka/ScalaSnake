@@ -3,6 +3,7 @@ package scalaSnake
 import akka.actor.ActorSystem
 import akka.stream._
 import akka.stream.scaladsl.{Flow, Sink, Source}
+import pl.pgizka.scalaSnake.model.SecondPlayerDirectionKey
 import scalaSnake.Graphics.GameScreen
 import scalaSnake.model._
 
@@ -50,7 +51,7 @@ object Main extends SwingApplication {
       if (state.gameOver) {
         killSwitch.shutdown()
         screen.close()
-        gameOverDialog.setScores(state.score)
+        gameOverDialog.setScores(state)
         gameOverDialog.visible = true
       }
     })
@@ -65,6 +66,8 @@ object Main extends SwingApplication {
     screen.component.reactions += {
       case KeyPressed(_, DirectionKey(direction), _, _) =>
         eventQueue.offer(MoveEvent(direction))
+      case KeyPressed(_, SecondPlayerDirectionKey(direction), _, _) =>
+        eventQueue.offer(SecondPlayerMoveEvent(direction))
       case KeyPressed(_, Key.P, _, _) =>
         eventQueue.offer(PauseEvent())
 
