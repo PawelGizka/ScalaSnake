@@ -7,7 +7,7 @@ import scalaSnake.rng.RNG
 
 class RewardTest extends WordSpec with MustMatchers {
 
-  implicit val config = Config(20, 20, 20, GameDifficulty.easy)
+  implicit val config = Config(20, 20, 20, GameDifficulty.easy, multiplayer = false)
 
   "A Reward" can {
     "be created from id and Rng" in {

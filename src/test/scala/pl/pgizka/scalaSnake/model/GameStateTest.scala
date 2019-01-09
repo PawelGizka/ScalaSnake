@@ -7,7 +7,7 @@ import scalaSnake.model._
 
 class GameStateTest extends WordSpec with MustMatchers {
 
-  implicit val config = Config(20, 20, 20, GameDifficulty.easy)
+  implicit val config = Config(20, 20, 20, GameDifficulty.easy, multiplayer = false)
 
   val gameState: GameState = GameState.initialGameState(100)
   val makeMoveAfterRefreshes = gameState.gameSpeed.makeMoveAfterRefreshes

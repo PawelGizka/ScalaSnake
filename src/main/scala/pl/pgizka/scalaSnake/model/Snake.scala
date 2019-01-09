@@ -29,7 +29,7 @@ case class Snake(blockPositions: Map[Int, Block], headIndex: Int, tailIndex: Int
 
   def isCollisionIn(other: Snake)(implicit config: Config): Boolean = {
     val headBlock = blockPositions(headIndex)
-    other.tailIndex.until(other.headIndex).foldLeft(false)((collision, key) => collision || other.blockPositions(key).equals(headBlock))
+    other.tailIndex.to(other.headIndex).foldLeft(false)((collision, key) => collision || other.blockPositions(key).equals(headBlock))
   }
 
   def makeMove(newHeadBlock: Block, rewards: Seq[Reward], validMove: Direction): (Snake, Option[Reward]) = {

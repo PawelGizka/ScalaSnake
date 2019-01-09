@@ -65,10 +65,7 @@ case class GameState(board: Board,
 object GameState {
 
   def initialGameState(seed: Long)(implicit config: Config): GameState = {
-    val centerX = config.screenWidth / 2
-    val centerY = config.screenHeight / 2
-    val blockCenter = Block(centerX, centerY)
-
+    val blockCenter = Block.blockCenter
     val snake = Snake.initialSnake(direction = Right, blockCenter.move(Up))
     val secondSnake = if (config.multiplayer) {
       Some(Snake.initialSnake(direction = Right, blockCenter.move(Down)))

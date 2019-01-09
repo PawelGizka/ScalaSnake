@@ -8,7 +8,7 @@ class BlockTest extends WordSpec with MustMatchers {
 
   def beMoved = afterWord("be moved")
 
-  implicit val config = Config(20, 20, 20, GameDifficulty.easy)
+  implicit val config = Config(20, 20, 20, GameDifficulty.easy, multiplayer = false)
 
   "A Block" should beMoved {
 

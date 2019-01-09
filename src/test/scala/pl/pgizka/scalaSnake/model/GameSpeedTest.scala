@@ -6,7 +6,7 @@ import scalaSnake.model.{Config, GameDifficulty, GameSpeed}
 
 class GameSpeedTest extends WordSpec with MustMatchers {
 
-  implicit val config = Config(20, 20, 20, GameDifficulty.easy)
+  implicit val config = Config(20, 20, 20, GameDifficulty.easy, multiplayer = false)
 
   "A GameSpeed" should {
     val speed = new GameSpeed(3)

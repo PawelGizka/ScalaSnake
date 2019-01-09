@@ -37,4 +37,10 @@ object Block {
     val x = id % config.screenWidth
     Block(x, y)
   }
+
+  def blockCenter(implicit config: Config): Block = {
+    val centerX = config.screenWidth / 2
+    val centerY = config.screenHeight / 2
+    Block(centerX, centerY)
+  }
 }
